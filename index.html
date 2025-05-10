@@ -8,22 +8,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-bg: #161616;
-            --secondary-bg: #222222;
-            --tertiary-bg-lines: #4a4a4a; 
-            --tertiary-bg-elements: #333333;
-            --dialog-bg: #2E2E2E;
-            --primary-text: #EFEFEF;
-            --secondary-text: #AAAAAA;
-            --accent-text: #4dabf7;
-            --period-normal-bg: #FEFADC;
-            --period-normal-text: #1A1A1A;
-            --period-cancelled-bg: #D3D3D3;
-            --period-cancelled-text: #1A1A1A;
-            --period-cancelled-border: #EA483D;
-            --period-cancelled-line: #EA483D;
-            --accent-color-icon: #F0C040;
-            --button-action-bg: #EA483D;
+            --primary-bg: #161616; /*頁面背景色*/
+            --secondary-bg: #222222; /*頁眉頁腳背景色*/
+            --tertiary-bg-lines: #4a4a4a; /*表格線條顏色*/
+            --tertiary-bg-elements: #333333; /*按鈕、輸入框等元素的背景色*/
+            --dialog-bg: #2E2E2E; /*彈出對話框背景色*/
+            --primary-text: #EFEFEF; /*主要文字顏色*/
+            --secondary-text: #AAAAAA; /*次要文字顏色*/
+            --accent-text: #4dabf7; /*高亮文字顏色*/
+            --period-normal-bg: #FEFADC; /*課程格子背景色*/
+            --period-normal-text: #1A1A1A; /*課程格子上文字顏色*/
+            --period-cancelled-bg: #D3D3D3; /*取消課程格子背景色*/
+            --period-cancelled-text: #1A1A1A; /*取消課程格子上文字顏色*/
+            --period-cancelled-border: #EA483D; /*取消課程格子邊框顏色*/
+            --period-cancelled-line: #EA483D; /*取消課程斜線顏色*/
+            --accent-color-icon: #F0C040; /*圖標高亮顏色*/
+            --button-action-bg: #EA483D; /*操作按鈕背景色（如設置按鈕）*/
             --font-family: 'Roboto', sans-serif;
             --period-border-radius: 5px;
             --row-height: 50px; 
@@ -33,12 +33,16 @@
             --grid-line-color: #383838;
         }
 
+        /* --- Basic Setup --- */
         body { margin: 0; font-family: var(--font-family); background-color: var(--primary-bg); color: var(--primary-text); overscroll-behavior-y: contain; }
         .app-shell { display: flex; flex-direction: column; min-height: 100vh; max-width: 450px; margin: 0 auto; background-color: var(--primary-bg); position: relative; overflow: hidden; }
+        
+        /* --- Views & Navigation --- */
         .app-view { width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; flex-direction: column; background-color: var(--primary-bg); transition: transform 0.3s ease-in-out; }
         .app-view.active { display: flex; z-index: 1; transform: translateX(0); }
         .app-view.slide-out-left { transform: translateX(-100%); }
         .app-view.slide-in-right { transform: translateX(100%); display: flex; }
+        
         .view-header { display: flex; align-items: center; padding: 10px 15px; background-color: var(--secondary-bg); border-bottom: 1px solid var(--tertiary-bg-elements); min-height: 36px; position: relative; }
         .view-header .back-arrow { background: none; border: none; color: var(--primary-text); font-size: 1.5em; cursor: pointer; margin-right: 15px; }
         .view-header .title { font-size: 1.2em; font-weight: 500; }
@@ -54,21 +58,29 @@
         .header-dropdown-item:hover { background-color: var(--tertiary-bg-elements); }
         .header-dropdown-item.info-item { cursor: default; color: var(--secondary-text); }
         .header-dropdown-item.info-item:hover { background-color: var(--dialog-bg); }
-        #timetable-main-view .app-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: var(--secondary-bg); border-bottom: 1px solid var(--tertiary-bg-elements); position: sticky; top: 0; z-index: 10; }
-        .week-navigation { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; background-color: var(--secondary-bg); border-bottom: 1px solid var(--tertiary-bg-elements); }
+        
+        /* --- Timetable Main View Specific Header --- */
+        #timetable-main-view .app-header { position: sticky; top: 0; z-index: 10; }
+        .week-navigation { display: flex; justify-content: space-between; align-items: center; padding: 8px 15px; background-color: var(--secondary-bg); border-bottom: 1px solid var(--tertiary-bg-elements); position: sticky; top: 57px; /* Height of app-header approx */ z-index: 9; }
         .week-navigation button { background: none; border: none; color: var(--primary-text); font-size: 1.3em; cursor: pointer; }
         .week-navigation .current-week-display { font-size: 0.9em; font-weight: 500; color: var(--secondary-text); }
+
+        /* --- Content Wrappers --- */
         .timetable-content-wrapper { flex-grow: 1; overflow-y: auto; }
-        .timetable-grid-scroll-container { /* overflow-x: auto; */ }
+        .timetable-grid-scroll-container { }
         .timetable-layout { display: flex; padding: 10px; }
+
+        /* --- Time Labels (Left Column) --- */
         .time-labels-column { width: var(--time-label-width); flex-shrink: 0; display: flex; flex-direction: column; padding-top: var(--day-header-height); }
         .time-grid-row-label { height: var(--row-height); box-sizing: border-box; display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-start; padding-right: 5px; padding-top: 2px; font-size: 0.7em; color: var(--secondary-text); border-bottom: 1px solid var(--grid-line-color); }
-        .time-grid-row-label.is-break { height: var(--break-row-height); }
+        .time-grid-row-label.is-break { height: var(--break-row-height); border-bottom-style: dashed; /* Dashed for breaks */ }
         .time-grid-row-label .period-number { font-weight: bold; font-size: 1.1em; }
         .time-grid-row-label .time-range { font-size: 0.9em; }
+        
+        /* --- Days Grid (Weekly View) --- */
         .days-data-container { flex-grow: 1; display: flex; flex-direction: column; }
         .days-header-row { display: grid; grid-template-columns: repeat(5, 1fr); height: var(--day-header-height); background-color: var(--primary-bg); }
-        .day-header-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.8em; color: var(--secondary-text); border-right: 1px solid var(--grid-line-color); border-bottom: 1px solid var(--grid-line-color); box-sizing: border-box; }
+        .day-header-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.8em; color: var(--secondary-text); border-right: 1px solid var(--grid-line-color); border-bottom: 1px solid var(--grid-line-color); box-sizing: border-box; cursor: pointer; }
         .day-header-cell:last-child { border-right: none; }
         .day-header-cell .day-name { font-weight: 500; font-size: 0.9em; }
         .day-header-cell .date-str { font-size: 0.8em; }
@@ -76,22 +88,63 @@
         .day-periods-column { display: flex; flex-direction: column; border-right: 1px solid var(--grid-line-color); position: relative; }
         .day-periods-column:last-child { border-right: none; }
         .grid-row { height: var(--row-height); box-sizing: border-box; border-bottom: 1px solid var(--grid-line-color); }
-        .grid-row.is-break { height: var(--break-row-height); }
-        .period-cell { position: absolute; left: 1px; right: 1px; background-color: var(--period-normal-bg); color: var(--period-normal-text); border-radius: var(--period-border-radius); padding: 4px 6px; font-size: 0.75em; overflow: hidden; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start; cursor: pointer; border: 1px solid #00000020; }
-        .period-cell .subject { font-weight: bold; font-size: 1em; margin-bottom: 1px; }
-        .period-cell .teacher, .period-cell .room { font-size: 0.85em; line-height: 1.2; }
+        .grid-row.is-break { height: var(--break-row-height); background-color: #202020; /* Slightly different for break rows */ }
+
+        /* --- Period Cells (Weekly View) --- */
+        .period-cell { /* Common styles for all period cells */
+            background-color: var(--period-normal-bg); color: var(--period-normal-text); 
+            padding: 4px 6px; font-size: 0.75em; 
+            overflow: hidden; box-sizing: border-box; 
+            display: flex; flex-direction: column; justify-content: flex-start; 
+            cursor: pointer; border: 1px solid #00000020;
+            border-radius: var(--period-border-radius);
+        }
+        .weekly-view-cell { /* Specific to weekly view for absolute positioning */
+            position: absolute; left: 1px; right: 1px;
+        }
+        .period-cell .subject { font-weight: bold; font-size: 1em; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .period-cell .teacher, .period-cell .room { font-size: 0.85em; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
         .period-cell .room { margin-top: auto; }
         .period-cell.cancelled { background-color: var(--period-cancelled-bg); color: var(--period-cancelled-text); border: 2px solid var(--period-cancelled-border) !important; opacity: 0.9; }
         .period-cell.cancelled::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; background: linear-gradient( to bottom left, transparent 0%, transparent calc(50% - 1.5px), var(--period-cancelled-line) calc(50% - 1.5px), var(--period-cancelled-line) calc(50% + 1.5px), transparent calc(50% + 1.5px), transparent 100% ); z-index: 1; }
         .period-cell.cancelled > * { position: relative; z-index: 2; }
-        .daily-view-day-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: var(--primary-bg); position: sticky; top: 0; z-index: 9; border-bottom: 1px solid var(--tertiary-bg-lines); }
+        .period-cell.divided { display: flex; flex-direction: row; padding: 0; }
+        .divided-part { flex: 1; padding: 4px 6px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-start; overflow: hidden; position: relative; }
+        .divided-part:first-child { border-right: 1px solid var(--tertiary-bg-lines); }
+        .divided-part .subject { font-size: 0.9em; } /* Slightly smaller for divided parts */
+        .divided-part .teacher, .divided-part .room { font-size: 0.8em; }
+
+        /* --- Daily View --- */
+        .daily-view-day-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 15px; background-color: var(--primary-bg); position: sticky; top: calc(57px + 38px); /* Header + WeekNav */ z-index: 8; border-bottom: 1px solid var(--tertiary-bg-lines); }
         .daily-view-day-header button { background: none; border: none; color: var(--primary-text); font-size: 1.5em; cursor: pointer; }
         .daily-view-day-header .current-day-display .day-date { font-size: 1.2em; font-weight: bold; }
         .daily-view-day-header .current-day-display .day-name { font-size: 0.9em; color: var(--secondary-text); display: block; }
-        .daily-view-container { display: flex; }
-        .daily-period-column { flex-grow: 1; display: flex; flex-direction: column; gap: 5px; padding: 0 5px; margin-top: var(--day-header-height); }
-        .daily-view-container .period-cell { position: static; font-size: 0.9em; padding: 12px; border: 1px solid var(--tertiary-bg-lines); margin-bottom: 5px; }
-        .daily-view-container .period-cell.empty { min-height: 30px; background-color: transparent; border: none; }
+        .daily-view-container { display: flex; padding: 10px; }
+        #time-labels-column-daily { width: var(--time-label-width); flex-shrink: 0; display: flex; flex-direction: column; } /* No top padding for daily time labels */
+        .daily-period-column { flex-grow: 1; display: flex; flex-direction: column; }
+        .daily-view-row { display: flex; min-height: var(--row-height); border-bottom: 1px solid var(--grid-line-color); }
+        .daily-view-row.is-break { min-height: var(--break-row-height); background-color: #202020; align-items: center; justify-content: center; }
+        .daily-view-row.is-break span { font-size: 0.8em; color: var(--secondary-text); }
+        .daily-view-container .period-cell { /* Daily view period cells are list items */
+            position: static; 
+            flex-grow: 1; /* Take full width of the column part */
+            margin: 0; /* Remove margin if set by common .period-cell */
+            border-radius: 0; /* No radius for list items usually */
+            border: none; /* Remove default border, row border handles it */
+            border-left: 1px solid var(--grid-line-color); /* Add left border */
+            min-height: calc(var(--row-height) - 1px); /* Adjust for border */
+            font-size: 0.9em; padding: 8px 10px;
+        }
+         .daily-view-container .period-cell.cancelled { /* Ensure daily cancelled style is correct */
+            /* Specific styles for daily view cancelled, if different from weekly */
+        }
+        .daily-view-container .period-cell.divided { flex-direction: column; /* Stack parts in daily view */ }
+        .daily-view-container .divided-part { border-right: none; border-bottom: 1px dashed #555; padding: 6px;}
+        .daily-view-container .divided-part:last-child { border-bottom: none; }
+
+
+        /* --- Common Elements (Footer, Customize Button, Modals, etc.) --- */
+        /* ... (Ensure all other CSS from previous full version is here) ... */
         .current-time-display-footer { position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%); font-size: 0.8em; color: var(--secondary-text); padding: 5px 10px; background-color: rgba(0,0,0,0.7); border-radius: 5px; z-index: 99; }
         .app-footer { display: flex; justify-content: space-around; padding: 8px 0; background-color: var(--secondary-bg); border-top: 1px solid var(--tertiary-bg-elements); position: sticky; bottom: 0; width: 100%; z-index: 100; height: 50px; }
         .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.7em; color: var(--secondary-text); cursor: pointer; flex-grow: 1; }
@@ -139,13 +192,19 @@
         .modal-full .action-item:hover { background-color: var(--tertiary-bg-elements); }
         #customize-periods-modal .setting-group { margin-bottom: 20px; }
         #customize-periods-modal .setting-group h4 { color: var(--secondary-text); font-size: 0.9em; margin-bottom: 8px; text-transform: uppercase; }
-        #customize-periods-modal .setting-item, #customize-list .customize-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--tertiary-bg-lines); }
+        #customize-periods-modal .setting-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--tertiary-bg-lines); }
+        #customize-list .customize-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--tertiary-bg-lines); cursor: pointer; }
+        #customize-list .customize-item:hover { background-color: #282828; }
         #customize-periods-modal .setting-item:last-child, #customize-list .customize-item:last-child { border-bottom: none; }
         .customize-item-info { font-size: 0.9em; flex-grow: 1; margin-right: 10px;}
         .customize-item-info .subject { font-weight: bold; color: var(--primary-text); }
         .customize-item-info .details { font-size: 0.8em; color: var(--secondary-text); margin-bottom: 5px;}
         #customize-periods-modal label { display: block; margin-bottom: 5px; font-size: 0.9em; color: var(--secondary-text); }
-        #customize-periods-modal input[type="text"], .customize-item-info input[type="text"] { width: calc(100% - 12px); padding: 6px; background-color: var(--tertiary-bg-elements); border: 1px solid #444; border-radius: 4px; color: var(--primary-text); font-size: 0.9em; margin-bottom: 3px; }
+        #customize-periods-modal input[type="text"], .customize-item-info input[type="text"] { width: calc(100% - 12px); padding: 6px; background-color: var(--tertiary-bg-elements); border: 1px solid #444; border-radius: 4px; color: var(--primary-text); font-size: 0.9em; margin-bottom: 3px; /* display: none; Now controlled by sub-modal */ }
+        #edit-period-sub-modal input[type="text"], #edit-period-sub-modal select, #edit-period-sub-modal input[type="color"] {
+             background-color: var(--tertiary-bg-elements); color: var(--primary-text); border: 1px solid #444;
+             padding: 6px; border-radius: 4px; font-size: 0.9em;
+        }
         .switch { position: relative; display: inline-block; width: 50px; height: 24px; flex-shrink: 0; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--tertiary-bg-elements); transition: .4s; border-radius: 24px; }
@@ -170,11 +229,14 @@
         .list-item .item-text-content .item-subtitle { font-size: 0.8em; color: var(--secondary-text); }
         .list-item .item-action-icon { margin-left: auto; font-size: 1.2em; color: var(--secondary-text); }
         .list-item .item-action-icon.favorited { color: var(--accent-color-icon); }
+
     </style>
 </head>
 <body>
+    <!-- HTML structure is the same as the last full version you provided -->
+    <!-- Ensure the #timetable-grid-layout, #days-header-row-weekly, #days-periods-grid-weekly, -->
+    <!-- #time-labels-column-weekly, and #time-labels-column-daily IDs are correctly placed. -->
     <div class="app-shell">
-        <!-- Main Timetable View -->
         <div id="timetable-main-view" class="app-view active">
             <header class="app-header view-header"> 
                 <div class="header-main-title-group" id="main-header-title-clickable">
@@ -187,15 +249,12 @@
                 </div>
                 <div class="header-dropdown" id="header-class-dropdown"></div>
             </header>
-            
             <div class="week-navigation" id="week-navigation-controls" style="display: none;">
                 <button id="prev-week-btn"><i class="fas fa-chevron-left"></i></button>
                 <div class="current-week-display" id="current-week-display-text">Aktuelle Woche</div>
                 <button id="next-week-btn"><i class="fas fa-chevron-right"></i></button>
             </div>
-
             <div id="daily-view-day-header" class="daily-view-day-header" style="display: none;"></div>
-
             <div class="timetable-content-wrapper">
                 <div class="timetable-grid-scroll-container">
                     <div class="loading-indicator" id="timetable-loading-indicator" style="display: none;">Lade Stundenplan...</div>
@@ -207,17 +266,14 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="daily-view-container" style="display: none;">
                     <div class="time-labels-column" id="time-labels-column-daily"></div>
                     <div class="daily-period-column"></div>
                 </div>
-
                  <div class="customize-button-container">
                     <button id="customize-btn" title="Stunden anpassen"><i class="fas fa-cog"></i></button>
                 </div>
             </div>
-
             <div class="current-time-display-footer">Laden...</div>
             <footer class="app-footer">
                 <div class="nav-item"><i class="fas fa-home"></i> Start</div>
@@ -226,7 +282,6 @@
                 <div class="nav-item"><i class="fas fa-user"></i> Profil</div>
             </footer>
         </div>
-
         <div id="select-timetable-view" class="app-view">
             <header class="view-header">
                 <button class="back-arrow" data-targetview="timetable-main-view"><i class="fas fa-arrow-left"></i></button>
@@ -251,7 +306,6 @@
                 </div>
             </div>
         </div>
-
         <div id="classes-view" class="app-view">
             <header class="view-header">
                 <button class="back-arrow" data-targetview="select-timetable-view"><i class="fas fa-arrow-left"></i></button>
@@ -265,7 +319,6 @@
                 <div id="classes-list-container"></div>
             </div>
         </div>
-
         <div id="period-detail-modal" class="modal-full">
             <div class="modal-content">
                 <header class="modal-header">
@@ -290,7 +343,6 @@
                 </div>
             </div>
         </div>
-
         <div id="customize-periods-modal" class="modal-full">
             <div class="modal-content">
                 <header class="modal-header">
@@ -306,14 +358,41 @@
                     </div>
                     <div class="setting-group"><h4>Stundenplan Einträge (<span id="customize-list-current-plan"></span>)</h4>
                          <div id="customize-list-info" style="color: var(--secondary-text); font-size: 0.9em; margin-bottom: 10px;">
-                            Hier können einzelne Stunden angepasst oder als "Entfällt" markiert werden.
+                            Klicke auf einen Eintrag, um ihn zu bearbeiten.
                         </div><div id="customize-list"></div>
                     </div>
                 </div>
                 <div class="modal-footer"><button id="save-customizations">Speichern & Schließen</button></div>
             </div>
         </div>
-
+        <div id="edit-period-sub-modal" class="modal-overlay">
+            <div class="modal-dialog" style="max-width: 380px;">
+                <div class="modal-header" style="justify-content: space-between; padding: 10px 15px;">
+                    <h4 id="edit-period-title" style="margin:0; font-size: 1.1em;">Stunde bearbeiten</h4>
+                    <button class="back-button" id="close-edit-period-sub-modal" style="margin:0; font-size: 1.2em; padding: 0 5px;">&times;</button>
+                </div>
+                <div class="modal-body" style="max-height: 70vh; overflow-y: auto; padding: 15px;">
+                    <input type="hidden" id="editing-period-id">
+                    <div class="setting-item"><label for="edit-period-subject" style="width: 80px;">Fach:</label><input type="text" id="edit-period-subject" style="flex-grow:1;"></div>
+                    <div class="setting-item"><label for="edit-period-teacher" style="width: 80px;">Lehrer:</label><input type="text" id="edit-period-teacher" style="flex-grow:1;"></div>
+                    <div class="setting-item"><label for="edit-period-room" style="width: 80px;">Raum:</label><input type="text" id="edit-period-room" style="flex-grow:1;"></div>
+                    <div class="setting-item"><label for="edit-period-color" style="width: 80px;">Farbe:</label><input type="color" id="edit-period-color" value="#FEFADC"></div>
+                    <div class="setting-item"><label for="edit-period-type" style="width: 80px;">Typ:</label><select id="edit-period-type" style="flex-grow:1; padding: 5px; background-color: var(--tertiary-bg-elements); color: var(--primary-text); border: 1px solid #444;"><option value="normal">Normal</option><option value="double">Doppelstunde</option><option value="divided">Geteilt</option></select></div>
+                    <div id="divided-lesson-parts" style="display:none; margin-top:10px; padding-left:15px; border-left: 2px solid var(--accent-text);">
+                        <h5>Teil 1:</h5>
+                        <div class="setting-item"><label for="edit-divided1-subject" style="width:70px;">Fach:</label><input type="text" id="edit-divided1-subject" style="flex-grow:1;"></div>
+                        <div class="setting-item"><label for="edit-divided1-teacher" style="width:70px;">Lehrer:</label><input type="text" id="edit-divided1-teacher" style="flex-grow:1;"></div>
+                        <div class="setting-item"><label for="edit-divided1-room" style="width:70px;">Raum:</label><input type="text" id="edit-divided1-room" style="flex-grow:1;"></div>
+                        <h5 style="margin-top:10px;">Teil 2:</h5>
+                        <div class="setting-item"><label for="edit-divided2-subject" style="width:70px;">Fach:</label><input type="text" id="edit-divided2-subject" style="flex-grow:1;"></div>
+                        <div class="setting-item"><label for="edit-divided2-teacher" style="width:70px;">Lehrer:</label><input type="text" id="edit-divided2-teacher" style="flex-grow:1;"></div>
+                        <div class="setting-item"><label for="edit-divided2-room" style="width:70px;">Raum:</label><input type="text" id="edit-divided2-room" style="flex-grow:1;"></div>
+                    </div>
+                     <div class="setting-item" style="margin-top: 15px;"><span>Entfällt:</span><label class="switch"><input type="checkbox" id="edit-period-cancelled"><span class="slider"></span></label></div>
+                </div>
+                <div class="modal-footer" style="text-align: center; padding: 10px 15px;"><button id="save-single-period-changes" style="padding: 8px 16px; background-color: var(--accent-color-icon); color:black; border:none; border-radius:4px; cursor:pointer;">Änderungen übernehmen</button></div>
+            </div>
+        </div>
         <div id="view-changer-popup" class="modal-overlay">
             <div class="modal-dialog">
                 <div class="dialog-title">Ansicht wechseln</div>
@@ -324,6 +403,8 @@
     </div>
 
     <script>
+    // --- (The FULL JavaScript from the previous response where renderMainHeader was fixed, goes here) ---
+    // --- Ensure all functions are present and correctly defined. ---
     console.log("SCRIPT STARTING");
 
     // --- CONFIGURATION ---
@@ -347,6 +428,7 @@
     ];
 
     // --- DOM ELEMENTS ---
+    // ... (declarations as before)
     let appShell, allAppViews, timetableMainView, selectTimetableView, classesView,
         mainClassNameDisplay, searchTimetableIcon, changeViewIcon, mainHeaderTitleClickable,
         weekNavigationControls, prevWeekBtn, nextWeekBtn, currentWeekDisplayText,
@@ -357,13 +439,21 @@
         saveCustomizationsBtn, customAccountNameInput, customizeListContainer, customizeListCurrentPlan,
         viewChangerPopup, selectClassesOption, classesListContainer, searchClassesInput,
         searchTimetablesInput, favoritesSection, favoritesListContainer, noFavoritesMessage,
-        headerClassDropdown;
+        headerClassDropdown,
+        editPeriodSubModal, closeEditPeriodSubModalBtn, saveSinglePeriodChangesBtn,
+        editingPeriodIdInput, editPeriodSubjectInput, editPeriodTeacherInput, editPeriodRoomInput,
+        editPeriodColorInput, editPeriodTypeSelect, dividedLessonPartsDiv,
+        editDivided1SubjectInput, editDivided1TeacherInput, editDivided1RoomInput,
+        editDivided2SubjectInput, editDivided2TeacherInput, editDivided2RoomInput, editPeriodCancelledToggle;
+
 
     // --- APP STATE & DATA ---
+    // ... (appState and data_..._full, timetableDataSources as defined in the previous turn's FULL code)
     let appState = {
         currentView: 'timetable-main-view', currentTimetableId: '8d', customAccountName: '',
         timetableDisplayMode: 'weekly', currentDailyViewDayKey: 'Mon', currentWeekStartDate: null,
         timetableData: [], displayTimetableData: [], periodCustomizations: {}, favoriteTimetableIds: [],
+        editingPeriodOriginalData: null, 
         availableClasses: [
             { id: '8d', name: '8d', description: 'Klasse 8d', dataKey: 'data_8d_full' }, 
             { id: '7a', name: '7a', description: 'Klasse 7a', dataKey: 'data_7a_full' }, 
@@ -371,57 +461,17 @@
         ]
     };
 
-    const data_8d_full = [
-        { "id": "8d-mon-de1", "day": "Mon", "startTime": "08:00", "endTime": "08:45", "subject": "Deutsch", "teacher": "Pin", "room": "L404" },
-        { "id": "8d-mon-de2", "day": "Mon", "startTime": "08:50", "endTime": "09:35", "subject": "Deutsch", "teacher": "Pin", "room": "L404" },
-        { "id": "8d-mon-en", "day": "Mon", "startTime": "09:55", "endTime": "10:40", "subject": "Englisch", "teacher": "Sta", "room": "L403" },
-        { "id": "8d-mon-ma", "day": "Mon", "startTime": "10:45", "endTime": "11:30", "subject": "Mathe", "teacher": "Kli", "room": "L213" },
-        { "id": "8d-mon-sp", "day": "Mon", "startTime": "11:55", "endTime": "12:40", "subject": "Sport", "teacher": "Hein", "room": "LGTH" },
-        { "id": "8d-mon-er", "day": "Mon", "startTime": "12:45", "endTime": "13:30", "subject": "Erdkunde", "teacher": "May", "room": "L404" },
-        { "id": "8d-mon-eth", "day": "Mon", "startTime": "13:55", "endTime": "14:40", "subject": "Ethik", "teacher": "May, Bas", "room": "L404" },
-        { "id": "8d-mon-ag1", "day": "Mon", "startTime": "14:45", "endTime": "15:30", "subject": "AG Basket", "teacher": "LGTH", "room": "", "classes": "9a,8b,8c,8d" },
-        { "id": "8d-mon-ag2", "day": "Mon", "startTime": "15:35", "endTime": "16:20", "subject": "AG Basket", "teacher": "LGTH", "room": "", "classes": "9a,8b,8c,8d" },
-        { "id": "8d-tue-ch1", "day": "Tue", "startTime": "08:00", "endTime": "08:45", "subject": "Chemie", "teacher": "Vog", "room": "L313" },
-        { "id": "8d-tue-ch2", "day": "Tue", "startTime": "08:50", "endTime": "09:35", "subject": "Chemie", "teacher": "Vog", "room": "L313" },
-        { "id": "8d-tue-en", "day": "Tue", "startTime": "09:55", "endTime": "10:40", "subject": "Englisch", "teacher": "Sta", "room": "L403" },
-        { "id": "8d-tue-ku1", "day": "Tue", "startTime": "10:45", "endTime": "11:30", "subject": "Kunst", "teacher": "Val", "room": "L VH-Ku" },
-        { "id": "8d-tue-ku2", "day": "Tue", "startTime": "11:55", "endTime": "12:40", "subject": "Kunst", "teacher": "Val", "room": "L VH-Ku" },
-        { "id": "8d-tue-wat", "day": "Tue", "startTime": "12:45", "endTime": "13:30", "subject": "WAT", "teacher": "Schme", "room": "L303" },
-        { "id": "8d-tue-klha", "day": "Tue", "startTime": "13:55", "endTime": "14:40", "subject": "Kl/Ha", "teacher": "Kli, Schme", "room": "L318"},
-        { "id": "8d-wed-sp1", "day": "Wed", "startTime": "08:00", "endTime": "08:45", "subject": "Sport", "teacher": "Hein", "room": "TH" },
-        { "id": "8d-wed-sp2", "day": "Wed", "startTime": "08:50", "endTime": "09:35", "subject": "Sport", "teacher": "Hein", "room": "TH" },
-        { "id": "8d-wed-ph", "day": "Wed", "startTime": "09:55", "endTime": "10:40", "subject": "Physik", "teacher": "Kli", "room": "L202" },
-        { "id": "8d-wed-en", "day": "Wed", "startTime": "10:45", "endTime": "11:30", "subject": "Englisch", "teacher": "Sta", "room": "L403" },
-        { "id": "8d-wed-k1scb1", "day": "Wed", "startTime": "11:55", "endTime": "12:40", "subject": "Kurs1 ScB", "teacher": "Alt", "room": "L303" },
-        { "id": "8d-wed-k1ku1", "day": "Wed", "startTime": "12:45", "endTime": "13:30", "subject": "Kurs1 Ku", "teacher": "Alt", "room": "L315" },
-        { "id": "8d-wed-ag1", "day": "Wed", "startTime": "14:45", "endTime": "15:30", "subject": "AG", "teacher": "", "room": "", "classes": "8b, 8d" },
-        { "id": "8d-wed-ag2", "day": "Wed", "startTime": "15:35", "endTime": "16:20", "subject": "AG", "teacher": "", "room": "", "classes": "8b, 8d" },
-        { "id": "8d-thu-ma", "day": "Thu", "startTime": "08:50", "endTime": "09:35", "subject": "Ma", "teacher": "Kli", "room": "L202" },
-        { "id": "8d-thu-pol", "day": "Thu", "startTime": "09:55", "endTime": "10:40", "subject": "Pol", "teacher": "Schme", "room": "L318" },
-        { "id": "8d-thu-ge", "day": "Thu", "startTime": "10:45", "endTime": "11:30", "subject": "Ge", "teacher": "Schme", "room": "L318" },
-        { "id": "8d-thu-en", "day": "Thu", "startTime": "11:55", "endTime": "12:40", "subject": "En", "teacher": "Sta", "room": "L403" },
-        { "id": "8d-thu-de", "day": "Thu", "startTime": "12:45", "endTime": "13:30", "subject": "De", "teacher": "Pin", "room": "L214" },
-        { "id": "8d-thu-eth", "day": "Thu", "startTime": "13:55", "endTime": "14:40", "subject": "Eth", "teacher": "May, Bas", "room": "L404" },
-        { "id": "8d-thu-ag1", "day": "Thu", "startTime": "14:45", "endTime": "15:30", "subject": "AG", "teacher": "", "room": "", "classes": "8b, 8d" },
-        { "id": "8d-thu-ag2", "day": "Thu", "startTime": "15:35", "endTime": "16:20", "subject": "AG", "teacher": "", "room": "", "classes": "8b, 8d" },
-        { "id": "8d-fri-ph", "day": "Fri", "startTime": "08:00", "endTime": "08:45", "subject": "Physik", "teacher": "Kli", "room": "L212" },
-        { "id": "8d-fri-bio", "day": "Fri", "startTime": "08:50", "endTime": "09:35", "subject": "Bio", "teacher": "Ehr", "room": "L312" },
-        { "id": "8d-fri-itg", "day": "Fri", "startTime": "09:55", "endTime": "10:40", "subject": "ITG", "teacher": "ScB", "room": "L303" },
-        { "id": "8d-fri-de", "day": "Fri", "startTime": "10:45", "endTime": "11:30", "subject": "Deutsch", "teacher": "Pin", "room": "L214" },
-        { "id": "8d-fri-ma", "day": "Fri", "startTime": "11:55", "endTime": "12:40", "subject": "Ma", "teacher": "Kli", "room": "L214" },
-        { "id": "8d-fri-k1scb", "day": "Fri", "startTime": "12:45", "endTime": "13:30", "subject": "Kurs1 ScB", "teacher": "Alt", "room": "L303" },
-        { "id": "8d-fri-ag1", "day": "Fri", "startTime": "14:45", "endTime": "15:30", "subject": "AG", "teacher": "", "room": "", "classes": "9a, 9c" },
-        { "id": "8d-fri-ag2", "day": "Fri", "startTime": "15:35", "endTime": "16:20", "subject": "AG", "teacher": "", "room": "", "classes": "9a, 9c" }
-    ];
-    const data_7a_full = [
-        { "id": "7a-mon1", "day": "Mon", "startTime": "08:00", "endTime": "08:45", "subject": "Mathe", "teacher": "Huber", "room": "R101" },
-        { "id": "7a-mon2", "day": "Mon", "startTime": "08:50", "endTime": "09:35", "subject": "Deutsch", "teacher": "Schmidt", "room": "R102" },
-        { "id": "7a-tue1", "day": "Tue", "startTime": "08:00", "endTime": "08:45", "subject": "Englisch", "teacher": "Müller", "room": "R101" }
-    ];
-    const data_9c_full = [
-        { "id": "9c-wed3", "day": "Wed", "startTime": "09:55", "endTime": "10:40", "subject": "Kunst", "teacher": "Graf", "room": "Kunstraum" },
-        { "id": "9c-thu1", "day": "Thu", "startTime": "08:00", "endTime": "08:45", "subject": "Sport", "teacher": "Klein", "room": "TH-Oben" }
-    ];
+    const data_8d_full = [ /* Paste data_8d_full from previous full response */ {"id":"8d-mon-de1","day":"Mon","startTime":"08:00","endTime":"08:45","subject":"Deutsch","teacher":"Pin","room":"L404"},{"id":"8d-mon-de2","day":"Mon","startTime":"08:50","endTime":"09:35","subject":"Deutsch","teacher":"Pin","room":"L404"},{"id":"8d-mon-en","day":"Mon","startTime":"09:55","endTime":"10:40","subject":"Englisch","teacher":"Sta","room":"L403"},{"id":"8d-mon-ma","day":"Mon","startTime":"10:45","endTime":"11:30","subject":"Mathe","teacher":"Kli","room":"L213"},{"id":"8d-mon-sp","day":"Mon","startTime":"11:55","endTime":"12:40","subject":"Sport","teacher":"Hein","room":"LGTH"},{"id":"8d-mon-er","day":"Mon","startTime":"12:45","endTime":"13:30","subject":"Erdkunde","teacher":"May","room":"L404"},{"id":"8d-mon-eth","day":"Mon","startTime":"13:55","endTime":"14:40","subject":"Ethik","teacher":"May, Bas","room":"L404"},{"id":"8d-mon-ag1","day":"Mon","startTime":"14:45","endTime":"15:30","subject":"AG Basket","teacher":"LGTH","room":"","classes":"9a,8b,8c,8d"},{"id":"8d-mon-ag2","day":"Mon","startTime":"15:35","endTime":"16:20","subject":"AG Basket","teacher":"LGTH","room":"","classes":"9a,8b,8c,8d"},{"id":"8d-tue-ch1","day":"Tue","startTime":"08:00","endTime":"08:45","subject":"Chemie","teacher":"Vog","room":"L313"},{"id":"8d-tue-ch2","day":"Tue","startTime":"08:50","endTime":"09:35","subject":"Chemie","teacher":"Vog","room":"L313"},{"id":"8d-tue-en","day":"Tue","startTime":"09:55","endTime":"10:40","subject":"Englisch","teacher":"Sta","room":"L403"},{"id":"8d-tue-ku1","day":"Tue","startTime":"10:45","endTime":"11:30","subject":"Kunst","teacher":"Val","room":"L VH-Ku"},{"id":"8d-tue-ku2","day":"Tue","startTime":"11:55","endTime":"12:40","subject":"Kunst","teacher":"Val","room":"L VH-Ku"},{"id":"8d-tue-wat","day":"Tue","startTime":"12:45","endTime":"13:30","subject":"WAT","teacher":"Schme","room":"L303"},{"id":"8d-tue-klha","day":"Tue","startTime":"13:55","endTime":"14:40","subject":"Kl/Ha","teacher":"Kli, Schme","room":"L318"},{"id":"8d-wed-sp1","day":"Wed","startTime":"08:00","endTime":"08:45","subject":"Sport","teacher":"Hein","room":"TH"},{"id":"8d-wed-sp2","day":"Wed","startTime":"08:50","endTime":"09:35","subject":"Sport","teacher":"Hein","room":"TH"},{"id":"8d-wed-ph","day":"Wed","startTime":"09:55","endTime":"10:40","subject":"Physik","teacher":"Kli","room":"L202"},{"id":"8d-wed-en","day":"Wed","startTime":"10:45","endTime":"11:30","subject":"Englisch","teacher":"Sta","room":"L403"},
+    { "id": "8d-wed-kurs1", "day": "Wed", "startTime": "11:55", "endTime": "12:40", "lessonType": "divided", "dividedParts": [ { "subject": "Kurs1", "teacher": "ScB", "room": "L303" }, { "subject": "Kurs1", "teacher": "Alt", "room": "L315" } ] },
+    { "id": "8d-wed-kurs2", "day": "Wed", "startTime": "12:45", "endTime": "13:30", "lessonType": "divided", "dividedParts": [ { "subject": "Kurs1", "teacher": "ScB", "room": "L303" }, { "subject": "Kurs1", "teacher": "Alt", "room": "L315" } ] }, // Assuming the second Kurs1 slot is also divided based on image
+    {"id":"8d-wed-ag1","day":"Wed","startTime":"14:45","endTime":"15:30","subject":"AG","teacher":"","room":"","classes":"8b, 8d"},{"id":"8d-wed-ag2","day":"Wed","startTime":"15:35","endTime":"16:20","subject":"AG","teacher":"","room":"","classes":"8b, 8d"},{"id":"8d-thu-ma","day":"Thu","startTime":"08:50","endTime":"09:35","subject":"Ma","teacher":"Kli","room":"L202"},{"id":"8d-thu-pol","day":"Thu","startTime":"09:55","endTime":"10:40","subject":"Pol","teacher":"Schme","room":"L318"},{"id":"8d-thu-ge","day":"Thu","startTime":"10:45","endTime":"11:30","subject":"Ge","teacher":"Schme","room":"L318"},{"id":"8d-thu-en","day":"Thu","startTime":"11:55","endTime":"12:40","subject":"En","teacher":"Sta","room":"L403"},{"id":"8d-thu-de","day":"Thu","startTime":"12:45","endTime":"13:30","subject":"De","teacher":"Pin","room":"L214"},{"id":"8d-thu-eth","day":"Thu","startTime":"13:55","endTime":"14:40","subject":"Eth","teacher":"May, Bas","room":"L404"},{"id":"8d-thu-ag1","day":"Thu","startTime":"14:45","endTime":"15:30","subject":"AG","teacher":"","room":"","classes":"8b, 8d"},{"id":"8d-thu-ag2","day":"Thu","startTime":"15:35","endTime":"16:20","subject":"AG","teacher":"","room":"","classes":"8b, 8d"},
+    { "id": "8d-fri-ph-bio", "day": "Fri", "startTime": "08:00", "endTime": "08:45", "lessonType": "divided", "dividedParts": [ { "subject": "Ph", "teacher": "Kli", "room": "L212" }, { "subject": "Bio", "teacher": "Ehr", "room": "L315" } ] }, // Friday divided example
+    { "id": "8d-fri-ph-bio2", "day": "Fri", "startTime": "08:50", "endTime": "09:35", "lessonType": "divided", "dividedParts": [ { "subject": "Ph", "teacher": "Kli", "room": "L212" }, { "subject": "Bio", "teacher": "Ehr", "room": "L315" } ] },
+    {"id":"8d-fri-itg","day":"Fri","startTime":"09:55","endTime":"10:40","subject":"ITG","teacher":"ScB","room":"L303"},{"id":"8d-fri-de","day":"Fri","startTime":"10:45","endTime":"11:30","subject":"Deutsch","teacher":"Pin","room":"L214"},{"id":"8d-fri-ma","day":"Fri","startTime":"11:55","endTime":"12:40","subject":"Ma","teacher":"Kli","room":"L214"},
+    { "id": "8d-fri-kurs1scb-alt", "day": "Fri", "startTime": "12:45", "endTime": "13:30", "lessonType": "divided", "dividedParts": [ { "subject": "Kurs1", "teacher": "ScB", "room": "L303" }, { "subject": "Kurs1", "teacher": "Alt", "room": "L314" } ] },
+    {"id":"8d-fri-ag1","day":"Fri","startTime":"14:45","endTime":"15:30","subject":"AG","teacher":"","room":"","classes":"9a, 9c"},{"id":"8d-fri-ag2","day":"Fri","startTime":"15:35","endTime":"16:20","subject":"AG","teacher":"","room":"","classes":"9a, 9c"}];
+    const data_7a_full = [{"id":"7a-mon1","day":"Mon","startTime":"08:00","endTime":"08:45","subject":"Mathe","teacher":"Huber","room":"R101"},{"id":"7a-mon2","day":"Mon","startTime":"08:50","endTime":"09:35","subject":"Deutsch","teacher":"Schmidt","room":"R102"},{"id":"7a-tue1","day":"Tue","startTime":"08:00","endTime":"08:45","subject":"Englisch","teacher":"Müller","room":"R101"}];
+    const data_9c_full = [{"id":"9c-wed3","day":"Wed","startTime":"09:55","endTime":"10:40","subject":"Kunst","teacher":"Graf","room":"Kunstraum"},{"id":"9c-thu1","day":"Thu","startTime":"08:00","endTime":"08:45","subject":"Sport","teacher":"Klein","room":"TH-Oben"}];
 
     const timetableDataSources = {
         'data_8d_full': data_8d_full,
@@ -429,224 +479,35 @@
         'data_9c_full': data_9c_full,
     };
     
-    // --- DATE UTILITIES ---
+    // --- (Paste the rest of the JavaScript: DATE UTILITIES, LOCALSTORAGE, DATA HANDLING, UI RENDERING (including fixed renderMainHeader), EVENT LISTENERS, assignDOMelements, initApp) ---
+    // --- Ensure all functions are correctly defined and complete from the previous successful full script. ---
     function getMonday(d) { d = new Date(d); let day = d.getDay(), diff = d.getDate() - day + (day === 0 ? -6 : 1); return new Date(d.setDate(diff)); }
     function addDays(date, days) { let result = new Date(date); result.setDate(result.getDate() + days); return result; }
     function formatDate(date, format = "dd.mm") { if (!date) return ""; const d = String(date.getDate()).padStart(2, '0'); const m = String(date.getMonth() + 1).padStart(2, '0'); const yy = String(date.getFullYear()).slice(-2); if (format === "dd.mm.yy") return `${d}.${m}.${yy}`; return `${d}.${m}`; }
     function getWeekDateInfo(startDate) { const weekDates = {}; const dayKeys = Object.keys(GERMAN_DAYS); for(let i=0; i < dayKeys.length; i++) { weekDates[dayKeys[i]] = addDays(startDate, i); } return weekDates; }
     function getWeekNumber(d) { d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7)); var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1)); var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7); return weekNo; }
-
-    // --- LOCALSTORAGE FUNCTIONS ---
     function saveState() { try { localStorage.setItem('timetableAppState', JSON.stringify({ currentTimetableId: appState.currentTimetableId, customAccountName: appState.customAccountName, timetableDisplayMode: appState.timetableDisplayMode, currentDailyViewDayKey: appState.currentDailyViewDayKey, currentWeekStartDate: appState.currentWeekStartDate ? appState.currentWeekStartDate.toISOString() : null, periodCustomizations: appState.periodCustomizations, favoriteTimetableIds: appState.favoriteTimetableIds })); } catch (e) { console.error("Error saving state:", e); } }
     function loadState() { const saved = localStorage.getItem('timetableAppState'); if (saved) { try { const loadedState = JSON.parse(saved); appState = { ...appState, ...loadedState, currentWeekStartDate: loadedState.currentWeekStartDate ? new Date(loadedState.currentWeekStartDate) : getMonday(new Date()) }; } catch (e) { console.error("Error parsing state:", e); appState.currentWeekStartDate = getMonday(new Date()); } } else { appState.currentWeekStartDate = getMonday(new Date()); } loadAndPrepareTimetableData(appState.currentTimetableId); }
-    
-    // --- DATA HANDLING ---
-    function loadAndPrepareTimetableData(timetableId) {
-        if(timetableLoadingIndicator) timetableLoadingIndicator.style.display = 'block';
-        if (document.getElementById('timetable-grid-layout')) document.getElementById('timetable-grid-layout').style.display = 'none';
-        if (dailyViewContainer) dailyViewContainer.style.display = 'none';
-
-        const timetableInfo = appState.availableClasses.find(c => c.id === timetableId);
-        const rawData = timetableInfo && timetableDataSources[timetableInfo.dataKey] ? timetableDataSources[timetableInfo.dataKey] : [];
-        
-        appState.timetableData = JSON.parse(JSON.stringify(rawData));
-
-        const customizationsForCurrentPlan = appState.periodCustomizations[timetableId] || {};
-        appState.displayTimetableData = appState.timetableData.map(period => {
-            const custom = customizationsForCurrentPlan[period.id] || {};
-            return { ...period, room: custom.room !== undefined ? custom.room : period.room, teacher: custom.teacher !== undefined ? custom.teacher : period.teacher, isCancelled: custom.isCancelled !== undefined ? custom.isCancelled : (period.isCancelled || false), };
-        });
-        if(timetableLoadingIndicator) timetableLoadingIndicator.style.display = 'none';
-    }
+    function loadAndPrepareTimetableData(timetableId) { if(timetableLoadingIndicator) timetableLoadingIndicator.style.display = 'block'; if (document.getElementById('timetable-grid-layout')) document.getElementById('timetable-grid-layout').style.display = 'none'; if (dailyViewContainer) dailyViewContainer.style.display = 'none'; const timetableInfo = appState.availableClasses.find(c => c.id === timetableId); const rawData = timetableInfo && timetableDataSources[timetableInfo.dataKey] ? timetableDataSources[timetableInfo.dataKey] : []; appState.timetableData = JSON.parse(JSON.stringify(rawData)); const customizationsForCurrentPlan = appState.periodCustomizations[timetableId] || {}; appState.displayTimetableData = appState.timetableData.map(period => { const custom = customizationsForCurrentPlan[period.id] || {}; return {  ...period, subject: custom.subject !== undefined ? custom.subject : period.subject, teacher: custom.teacher !== undefined ? custom.teacher : period.teacher, room: custom.room !== undefined ? custom.room : period.room, color: custom.color !== undefined ? custom.color : period.color, lessonType: custom.lessonType !== undefined ? custom.lessonType : (period.lessonType || (period.isDivided ? 'divided' : (period.endTime && period.startTime && (timeToMinutes(period.endTime) - timeToMinutes(period.startTime) > 50) ? 'double' : 'normal'))), dividedParts: custom.dividedParts !== undefined ? custom.dividedParts : period.dividedParts, isCancelled: custom.isCancelled !== undefined ? custom.isCancelled : (period.isCancelled || false), }; }); if(timetableLoadingIndicator) timetableLoadingIndicator.style.display = 'none'; }
     function getPeriodFullTime(period) { return `${period.startTime} - ${period.endTime}`; }
-    
-    // --- UI RENDERING ---
-    function renderMainHeader() {
-        if (!mainClassNameDisplay || !weekNavigationControls || !currentWeekDisplayText) {
-            console.error("Main header elements not found for rendering.");
-            return;
-        }
-        const currentTimetableInfo = appState.availableClasses.find(c => c.id === appState.currentTimetableId);
-        let displayName = currentTimetableInfo ? currentTimetableInfo.name : appState.currentTimetableId;
-        if (appState.customAccountName) {
-            displayName = appState.customAccountName;
-        }
-        mainClassNameDisplay.innerHTML = `${displayName} <i class="fas fa-caret-down dropdown-arrow"></i>`;
-        
-        if (appState.timetableDisplayMode === 'weekly') {
-            weekNavigationControls.style.display = 'flex';
-            if (appState.currentWeekStartDate) { 
-                const weekStart = appState.currentWeekStartDate;
-                const weekEnd = addDays(weekStart, 4); 
-                currentWeekDisplayText.textContent = `KW${getWeekNumber(weekStart)}: ${formatDate(weekStart)} - ${formatDate(weekEnd)}`;
-            } else {
-                currentWeekDisplayText.textContent = "Datum wird geladen...";
-            }
-        } else {
-            weekNavigationControls.style.display = 'none';
-        }
-    }
-
-    function renderTimeLabelsWeekly() {
-        const container = document.getElementById('time-labels-column-weekly');
-        if (!container) {console.error("Time labels container weekly not found"); return;}
-        container.innerHTML = '';
-        timeGridRowsDefinition.forEach(rowDef => {
-            const labelEl = document.createElement('div');
-            labelEl.classList.add('time-grid-row-label');
-            if (rowDef.type === 'break') {
-                labelEl.classList.add('is-break');
-            } else {
-                labelEl.innerHTML = `<span class="period-number">${rowDef.label}</span><span class="time-range">${rowDef.startTime}</span>`;
-            }
-            container.appendChild(labelEl);
-        });
-    }
-
-    function renderDayHeadersFull() {
-        const container = document.getElementById('days-header-row-weekly');
-        if (!container) {console.error("Days header row weekly not found"); return;}
-        container.innerHTML = '';
-        const weekDates = getWeekDateInfo(appState.currentWeekStartDate);
-        Object.keys(GERMAN_DAYS).forEach(dayKey => {
-            const headerCell = document.createElement('div');
-            headerCell.classList.add('day-header-cell');
-            headerCell.dataset.daykey = dayKey;
-            headerCell.innerHTML = `<span class="day-name">${GERMAN_DAYS[dayKey]}</span><span class="date-str">${formatDate(weekDates[dayKey])}</span>`;
-            headerCell.addEventListener('click', () => { appState.timetableDisplayMode = 'daily'; appState.currentDailyViewDayKey = dayKey; renderTimetable(); updateViewChangerSelection(); saveState(); });
-            container.appendChild(headerCell);
-        });
-    }
-    
-    function renderTimetable() { 
-        renderMainHeader(); 
-        const timetableLayout = document.getElementById('timetable-grid-layout');
-        if (appState.timetableDisplayMode === 'weekly') { 
-            if(timetableLayout) timetableLayout.style.display = 'flex'; 
-            if(dailyViewContainer) dailyViewContainer.style.display = 'none'; 
-            if(dailyViewDayHeader) dailyViewDayHeader.style.display = 'none'; 
-            renderWeeklyView(); 
-        } else { 
-            if(timetableLayout) timetableLayout.style.display = 'none'; 
-            if(dailyViewContainer) dailyViewContainer.style.display = 'flex'; 
-            if(dailyViewDayHeader) dailyViewDayHeader.style.display = 'flex'; 
-            renderDailyView(); 
-        } 
-    }
-    
-    function renderWeeklyView() {
-        const timetableLayout = document.getElementById('timetable-grid-layout');
-        const periodsGrid = document.getElementById('days-periods-grid-weekly');
-        if (!timetableLayout || !periodsGrid) { console.error("Weekly grid layout elements not found for renderWeeklyView."); return; }
-
-        renderTimeLabelsWeekly();
-        renderDayHeadersFull();
-        
-        periodsGrid.innerHTML = ''; 
-
-        Object.keys(GERMAN_DAYS).forEach(dayKey => {
-            const dayColumnEl = document.createElement('div');
-            dayColumnEl.classList.add('day-periods-column');
-            dayColumnEl.dataset.day = dayKey;
-            
-            timeGridRowsDefinition.forEach(rowDef => {
-                const gridRowVisual = document.createElement('div');
-                gridRowVisual.classList.add('grid-row');
-                if (rowDef.type === 'break') gridRowVisual.classList.add('is-break');
-                dayColumnEl.appendChild(gridRowVisual);
-            });
-            periodsGrid.appendChild(dayColumnEl);
-        });
-
-        if (!appState.displayTimetableData || appState.displayTimetableData.length === 0) { return; }
-
-        appState.displayTimetableData.forEach(period => {
-            const dayColumnEl = periodsGrid.querySelector(`.day-periods-column[data-day="${period.day}"]`);
-            if (!dayColumnEl) return;
-
-            const periodCell = document.createElement('div');
-            periodCell.classList.add('period-cell');
-            periodCell.dataset.periodId = period.id;
-
-            let topOffset = 0;
-            let totalHeight = 0;
-            let periodStarted = false;
-            
-            for (let i = 0; i < timeGridRowsDefinition.length; i++) {
-                const rowDef = timeGridRowsDefinition[i];
-                const isBreak = rowDef.type === 'break';
-                const rowActualHeight = isBreak ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--break-row-height')) : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--row-height'));
-
-                if (rowDef.startTime === period.startTime) periodStarted = true;
-                
-                if (!periodStarted) {
-                    topOffset += rowActualHeight + 1; 
-                }
-                if (periodStarted) {
-                    totalHeight += rowActualHeight;
-                    if (rowDef.endTime === period.endTime) break; 
-                    if (i < timeGridRowsDefinition.length - 1) totalHeight +=1; 
-                }
-            }
-            
-            periodCell.style.top = `${topOffset}px`;
-            periodCell.style.height = `${totalHeight > 0 ? totalHeight -1 : 0}px`;
-
-            periodCell.innerHTML = `<div class="subject">${period.subject}</div><div class="teacher">${period.teacher||''}</div>${period.multiClass&&period.classes?`<div class="class-info">${period.classes}</div>`:''}<div class="room">${period.room||'-'}</div>`;
-            if (period.isCancelled) periodCell.classList.add('cancelled');
-            periodCell.addEventListener('click', () => showPeriodDetail(period.id));
-            dayColumnEl.appendChild(periodCell);
-        });
-        timetableLayout.style.display = 'flex';
-    }
-
-    function renderDailyView() {
-        const dailyTimeLabelsContainer = document.getElementById('time-labels-column-daily');
-        if (!dailyTimeLabelsContainer || !dailyPeriodColumn || !dailyViewDayHeader) { console.error("Daily view DOM not ready."); return; }
-        
-        dailyTimeLabelsContainer.innerHTML = '';
-        timeGridRowsDefinition.filter(r => r.type === 'period').forEach(slotDef => {
-            const slotEl = document.createElement('div'); 
-            slotEl.classList.add('time-grid-row-label'); 
-            slotEl.style.height = `var(--row-height)`;
-            slotEl.innerHTML = `<span class="period-number">${slotDef.label}</span><span class="time-range">${slotDef.startTime}</span>`; 
-            dailyTimeLabelsContainer.appendChild(slotEl);
-        });
-
-        dailyPeriodColumn.innerHTML = ''; 
-        renderDailyViewHeaderControls();
-        if (!appState.displayTimetableData || appState.displayTimetableData.length === 0) { dailyPeriodColumn.innerHTML = '<div style="padding:10px; color:var(--secondary-text); font-size:0.9em; text-align:center;">Keine Einträge.</div>'; return; }
-        const periodsForDay = appState.displayTimetableData.filter(p => p.day === appState.currentDailyViewDayKey).sort((a, b) => {
-            const timeA = parseInt(a.startTime.replace(':',''));
-            const timeB = parseInt(b.startTime.replace(':',''));
-            return timeA - timeB;
-        });
-        if (periodsForDay.length === 0) { dailyPeriodColumn.innerHTML = '<div style="padding:10px; color: var(--secondary-text); font-size:0.9em; text-align:center;">Keine Einträge für diesen Tag.</div>'; return;}
-        
-        periodsForDay.forEach(period => {
-            const periodCell = document.createElement('div'); periodCell.classList.add('period-cell'); periodCell.dataset.periodId = period.id;
-            periodCell.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:flex-start;"><div class="subject">${period.subject}</div><div style="font-size:0.8em;color:var(--secondary-text);text-align:right;">${getPeriodFullTime(period)}</div></div><div class="teacher">${period.teacher||''}</div>${period.multiClass&&period.classes?`<div class="class-info" style="font-size:0.8em;">${period.classes}</div>`:''}<div class="room">${period.room||'-'}</div>`;
-            if (period.isCancelled) periodCell.classList.add('cancelled'); if (period.multiClass) periodCell.classList.add('multi-class');
-            periodCell.addEventListener('click', () => showPeriodDetail(period.id)); dailyPeriodColumn.appendChild(periodCell);
-        });
-    }
-
+    function timeToMinutes(timeStr) { const [h, m] = timeStr.split(':').map(Number); return h * 60 + m; }
+    function renderMainHeader() { if (!mainClassNameDisplay || !weekNavigationControls || !currentWeekDisplayText) { console.error("Main header elements not found for rendering."); return; } const currentTimetableInfo = appState.availableClasses.find(c => c.id === appState.currentTimetableId); let displayName = currentTimetableInfo ? currentTimetableInfo.name : appState.currentTimetableId; if (appState.customAccountName) { displayName = appState.customAccountName; } mainClassNameDisplay.innerHTML = `${displayName} <i class="fas fa-caret-down dropdown-arrow"></i>`; if (appState.timetableDisplayMode === 'weekly') { weekNavigationControls.style.display = 'flex'; if (appState.currentWeekStartDate) {  const weekStart = appState.currentWeekStartDate; const weekEnd = addDays(weekStart, 4);  currentWeekDisplayText.textContent = `KW${getWeekNumber(weekStart)}: ${formatDate(weekStart)} - ${formatDate(weekEnd)}`; } else { currentWeekDisplayText.textContent = "Datum wird geladen..."; } } else { weekNavigationControls.style.display = 'none'; } }
+    function renderTimeLabelsWeekly() { const container = document.getElementById('time-labels-column-weekly'); if (!container) {console.error("Time labels container weekly not found"); return;} container.innerHTML = ''; timeGridRowsDefinition.forEach(rowDef => { const labelEl = document.createElement('div'); labelEl.classList.add('time-grid-row-label'); if (rowDef.type === 'break') { labelEl.classList.add('is-break'); } else { labelEl.innerHTML = `<span class="period-number">${rowDef.label}</span><span class="time-range">${rowDef.startTime}</span>`; } container.appendChild(labelEl); }); }
+    function renderDayHeadersFull() { const container = document.getElementById('days-header-row-weekly'); if (!container) {console.error("Days header row weekly not found"); return;} container.innerHTML = ''; const weekDates = getWeekDateInfo(appState.currentWeekStartDate); Object.keys(GERMAN_DAYS).forEach(dayKey => { const headerCell = document.createElement('div'); headerCell.classList.add('day-header-cell'); headerCell.dataset.daykey = dayKey; headerCell.innerHTML = `<span class="day-name">${GERMAN_DAYS[dayKey]}</span><span class="date-str">${formatDate(weekDates[dayKey])}</span>`; headerCell.addEventListener('click', () => { appState.timetableDisplayMode = 'daily'; appState.currentDailyViewDayKey = dayKey; renderTimetable(); updateViewChangerSelection(); saveState(); }); container.appendChild(headerCell); }); }
+    function renderTimetable() {  renderMainHeader();  const timetableLayout = document.getElementById('timetable-grid-layout'); if (appState.timetableDisplayMode === 'weekly') {  if(timetableLayout) timetableLayout.style.display = 'flex';  if(dailyViewContainer) dailyViewContainer.style.display = 'none';  if(dailyViewDayHeader) dailyViewDayHeader.style.display = 'none';  renderWeeklyView();  } else {  if(timetableLayout) timetableLayout.style.display = 'none';  if(dailyViewContainer) dailyViewContainer.style.display = 'flex';  if(dailyViewDayHeader) dailyViewDayHeader.style.display = 'flex';  renderDailyView();  }  }
+    function renderWeeklyView() { const timetableLayout = document.getElementById('timetable-grid-layout'); const periodsGrid = document.getElementById('days-periods-grid-weekly'); if (!timetableLayout || !periodsGrid) { console.error("Weekly grid layout elements not found for renderWeeklyView."); return; } renderTimeLabelsWeekly(); renderDayHeadersFull(); periodsGrid.innerHTML = '';  Object.keys(GERMAN_DAYS).forEach(dayKey => { const dayColumnEl = document.createElement('div'); dayColumnEl.classList.add('day-periods-column'); dayColumnEl.dataset.day = dayKey; timeGridRowsDefinition.forEach(rowDef => { const gridRowVisual = document.createElement('div'); gridRowVisual.classList.add('grid-row'); if (rowDef.type === 'break') gridRowVisual.classList.add('is-break'); dayColumnEl.appendChild(gridRowVisual); }); periodsGrid.appendChild(dayColumnEl); }); if (!appState.displayTimetableData || appState.displayTimetableData.length === 0) { return; } appState.displayTimetableData.forEach(period => { const dayColumnEl = periodsGrid.querySelector(`.day-periods-column[data-day="${period.day}"]`); if (!dayColumnEl) return; const periodCell = document.createElement('div'); periodCell.classList.add('period-cell', 'weekly-view-cell'); periodCell.dataset.periodId = period.id; if (period.color) periodCell.style.backgroundColor = period.color; let topOffset = 0; let totalHeight = 0; let periodStarted = false; for (let i = 0; i < timeGridRowsDefinition.length; i++) { const rowDef = timeGridRowsDefinition[i]; const isBreak = rowDef.type === 'break'; const rowActualHeight = isBreak ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--break-row-height')) : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--row-height')); if (rowDef.startTime === period.startTime) periodStarted = true; if (!periodStarted) { topOffset += rowActualHeight + 1;  } if (periodStarted) { totalHeight += rowActualHeight; if (rowDef.endTime === period.endTime) break;  if (i < timeGridRowsDefinition.length - 1) totalHeight +=1;  } } periodCell.style.top = `${topOffset}px`; periodCell.style.height = `${totalHeight > 0 ? totalHeight -1 : 0}px`; if (period.lessonType === 'divided' && period.dividedParts && period.dividedParts.length === 2) { periodCell.classList.add('divided'); periodCell.innerHTML = `<div class="divided-part"><div class="subject">${period.dividedParts[0].subject || ''}</div><div class="teacher">${period.dividedParts[0].teacher || ''}</div><div class="room">${period.dividedParts[0].room || ''}</div></div><div class="divided-part"><div class="subject">${period.dividedParts[1].subject || ''}</div><div class="teacher">${period.dividedParts[1].teacher || ''}</div><div class="room">${period.dividedParts[1].room || ''}</div></div>`; } else { periodCell.innerHTML = `<div class="subject">${period.subject}</div><div class="teacher">${period.teacher||''}</div>${period.multiClass&&period.classes?`<div class="class-info">${period.classes}</div>`:''}<div class="room">${period.room||'-'}</div>`; } if (period.isCancelled) periodCell.classList.add('cancelled'); periodCell.addEventListener('click', () => showPeriodDetail(period.id)); dayColumnEl.appendChild(periodCell); }); timetableLayout.style.display = 'flex'; }
+    function renderDailyView() { const dailyTimeLabelsContainer = document.getElementById('time-labels-column-daily'); if (!dailyTimeLabelsContainer || !dailyPeriodColumn || !dailyViewDayHeader) { console.error("Daily view DOM not ready."); return; } dailyTimeLabelsContainer.innerHTML = ''; timeGridRowsDefinition.forEach(rowDef => { const labelEl = document.createElement('div');  labelEl.classList.add('time-grid-row-label');  if (rowDef.type === 'break') { labelEl.classList.add('is-break'); labelEl.style.justifyContent = 'center'; labelEl.innerHTML = `<span>---</span>`;} else {  labelEl.innerHTML = `<span class="period-number">${rowDef.label}</span><span class="time-range">${rowDef.startTime}</span>`; } dailyTimeLabelsContainer.appendChild(labelEl); }); dailyPeriodColumn.innerHTML = '';  renderDailyViewHeaderControls(); if (!appState.displayTimetableData || appState.displayTimetableData.length === 0) { dailyPeriodColumn.innerHTML = '<div style="padding:10px; color:var(--secondary-text); font-size:0.9em; text-align:center;">Keine Einträge.</div>'; return; } const periodsForDay = appState.displayTimetableData.filter(p => p.day === appState.currentDailyViewDayKey).sort((a, b) => { const timeA = parseInt(a.startTime.replace(':','')); const timeB = parseInt(b.startTime.replace(':','')); return timeA - timeB; }); if (periodsForDay.length === 0) { dailyPeriodColumn.innerHTML = '<div style="padding:10px; color: var(--secondary-text); font-size:0.9em; text-align:center;">Keine Einträge für diesen Tag.</div>'; return;} timeGridRowsDefinition.forEach(rowDef => { const rowContainer = document.createElement('div'); rowContainer.classList.add('daily-view-row'); if(rowDef.type === 'break') {rowContainer.classList.add('is-break'); rowContainer.innerHTML = `<span>${rowDef.label}</span>`; dailyPeriodColumn.appendChild(rowContainer); return;} const periodInThisSlot = periodsForDay.find(p => p.startTime === rowDef.startTime); if (periodInThisSlot) { const periodCell = document.createElement('div'); periodCell.classList.add('period-cell'); periodCell.dataset.periodId = periodInThisSlot.id; if (periodInThisSlot.color) periodCell.style.backgroundColor = periodInThisSlot.color; let periodCellHeight = `var(--row-height)`; let startIndex = timeGridRowsDefinition.findIndex(r => r.startTime === periodInThisSlot.startTime); let endIndex = timeGridRowsDefinition.findIndex(r => r.endTime === periodInThisSlot.endTime); if (startIndex !== -1 && endIndex !== -1 && endIndex >= startIndex) { let calculatedHeight = 0; for (let i = startIndex; i <= endIndex; i++) { calculatedHeight += (timeGridRowsDefinition[i].type === 'break' ? parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--break-row-height')) : parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--row-height'))); if (i < endIndex) calculatedHeight += 1; } periodCellHeight = `${calculatedHeight > 0 ? calculatedHeight -1 : 0}px`; } periodCell.style.minHeight = periodCellHeight; if (periodInThisSlot.lessonType === 'divided' && periodInThisSlot.dividedParts && periodInThisSlot.dividedParts.length === 2) { periodCell.classList.add('divided'); periodCell.innerHTML = `<div class="divided-part"><div><strong>${periodInThisSlot.dividedParts[0].subject || ''}</strong></div><div>${periodInThisSlot.dividedParts[0].teacher || ''}</div><div>${periodInThisSlot.dividedParts[0].room || ''}</div></div><div class="divided-part"><div><strong>${periodInThisSlot.dividedParts[1].subject || ''}</strong></div><div>${periodInThisSlot.dividedParts[1].teacher || ''}</div><div>${periodInThisSlot.dividedParts[1].room || ''}</div></div>`; } else {  periodCell.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:flex-start;"><div class="subject">${periodInThisSlot.subject}</div><div style="font-size:0.8em;color:var(--secondary-text);text-align:right;">${getPeriodFullTime(periodInThisSlot)}</div></div><div class="teacher">${periodInThisSlot.teacher||''}</div>${periodInThisSlot.multiClass&&periodInThisSlot.classes?`<div class="class-info" style="font-size:0.8em;">${periodInThisSlot.classes}</div>`:''}<div class="room">${periodInThisSlot.room||'-'}</div>`; } if (periodInThisSlot.isCancelled) periodCell.classList.add('cancelled');  periodCell.addEventListener('click', () => showPeriodDetail(periodInThisSlot.id)); rowContainer.appendChild(periodCell); } else { let isSpanned = false; for(const p of periodsForDay){ if(timeToMinutes(p.startTime) < timeToMinutes(rowDef.startTime) && timeToMinutes(p.endTime) > timeToMinutes(rowDef.startTime)){ isSpanned = true; break; } } if(!isSpanned){ const emptyCell = document.createElement('div');  emptyCell.classList.add('period-cell', 'empty'); emptyCell.style.minHeight = `var(--row-height)`; rowContainer.appendChild(emptyCell); } else { rowContainer.style.display = 'none'; /* Hide row if it's spanned by a multi-period lesson */ } } dailyPeriodColumn.appendChild(rowContainer); }); }
     function renderDailyViewHeaderControls() { const dayKeys = Object.keys(GERMAN_DAYS); const currentIndex = dayKeys.indexOf(appState.currentDailyViewDayKey); const prevDayKey = currentIndex > 0 ? dayKeys[currentIndex - 1] : null; const nextDayKey = currentIndex < dayKeys.length - 1 ? dayKeys[currentIndex + 1] : null; const weekDates = getWeekDateInfo(appState.currentWeekStartDate); const currentDisplayDate = weekDates[appState.currentDailyViewDayKey]; dailyViewDayHeader.innerHTML = `<button id="prev-day-btn" ${!prevDayKey?'disabled style="opacity:0.3"':''}><i class="fas fa-chevron-left"></i></button><div class="current-day-display"><span class="day-date">${formatDate(currentDisplayDate)}</span><span class="day-name">${GERMAN_DAYS_FULL[appState.currentDailyViewDayKey]}</span></div><button id="next-day-btn" ${!nextDayKey?'disabled style="opacity:0.3"':''}><i class="fas fa-chevron-right"></i></button>`; if (prevDayKey) document.getElementById('prev-day-btn').onclick = () => { appState.currentDailyViewDayKey = prevDayKey; renderDailyView(); saveState(); }; if (nextDayKey) document.getElementById('next-day-btn').onclick = () => { appState.currentDailyViewDayKey = nextDayKey; renderDailyView(); saveState(); }; }
-    function showPeriodDetail(originalPeriodId) { const originalPeriod = appState.timetableData.find(p => p.id === originalPeriodId); if (!originalPeriod) return; const displayPeriod = appState.displayTimetableData.find(p => p.id === originalPeriodId); const effectivePeriod = displayPeriod || originalPeriod; const weekDates = getWeekDateInfo(appState.currentWeekStartDate); const periodDate = weekDates[effectivePeriod.day]; const formattedDate = periodDate ? formatDate(periodDate, "dd.mm.yy") : "Datum?"; document.getElementById('modal-period-day-date').textContent = `${GERMAN_DAYS[effectivePeriod.day]} | ${formattedDate}`; document.getElementById('modal-period-time').textContent = getPeriodFullTime(effectivePeriod); document.getElementById('modal-tab-subject').textContent = effectivePeriod.subject.substring(0,2).toUpperCase(); document.getElementById('modal-subject').textContent = effectivePeriod.subject; document.getElementById('modal-room').textContent = effectivePeriod.room||'-'; document.getElementById('modal-teacher').textContent = effectivePeriod.teacher||''; const currentTimetableInfo = appState.availableClasses.find(c => c.id === appState.currentTimetableId); let modalClassName = currentTimetableInfo ? currentTimetableInfo.name : appState.currentTimetableId; if (appState.customAccountName) { modalClassName = appState.customAccountName; } document.getElementById('modal-class-name-detail').textContent = effectivePeriod.multiClass && effectivePeriod.classes ? effectivePeriod.classes : modalClassName; document.getElementById('cancelled-banner').style.display = effectivePeriod.isCancelled ? 'block' : 'none'; periodDetailModal.classList.add('active'); }
-    function renderCustomizeList() { customizeListContainer.innerHTML = ''; customAccountNameInput.value = appState.customAccountName; const currentPlanInfo = appState.availableClasses.find(c => c.id === appState.currentTimetableId); customizeListCurrentPlan.textContent = currentPlanInfo ? currentPlanInfo.name : appState.currentTimetableId; if (!appState.displayTimetableData) return; appState.displayTimetableData.sort((a,b) => {const dayOrder=Object.keys(GERMAN_DAYS); if(dayOrder.indexOf(a.day)===dayOrder.indexOf(b.day))return (parseInt(a.startTime.replace(':','')) - parseInt(b.startTime.replace(':',''))); return dayOrder.indexOf(a.day)-dayOrder.indexOf(b.day);}).forEach(period => { const itemDiv = document.createElement('div'); itemDiv.classList.add('customize-item'); itemDiv.innerHTML = `<div class="customize-item-info"><div class="subject">${period.subject} (${GERMAN_DAYS[period.day]})</div><div class="details">${getPeriodFullTime(period)}</div><input type="text" class="customize-teacher-input" data-period-id="${period.id}" value="${period.teacher||''}" placeholder="Lehrer"><input type="text" class="customize-room-input" data-period-id="${period.id}" value="${period.room||''}" placeholder="Raum"></div><label class="switch" title="Entfällt"><input type="checkbox" class="customize-cancel-toggle" data-period-id="${period.id}" ${period.isCancelled?'checked':''}><span class="slider"></span></label>`; customizeListContainer.appendChild(itemDiv); }); }
+    function showPeriodDetail(originalPeriodId) { const originalPeriod = appState.timetableData.find(p => p.id === originalPeriodId); if (!originalPeriod) return; const displayPeriod = appState.displayTimetableData.find(p => p.id === originalPeriodId); const effectivePeriod = displayPeriod || originalPeriod; const weekDates = getWeekDateInfo(appState.currentWeekStartDate); const periodDate = weekDates[effectivePeriod.day]; const formattedDate = periodDate ? formatDate(periodDate, "dd.mm.yy") : "Datum?"; document.getElementById('modal-period-day-date').textContent = `${GERMAN_DAYS[effectivePeriod.day]} | ${formattedDate}`; document.getElementById('modal-period-time').textContent = getPeriodFullTime(effectivePeriod); document.getElementById('modal-tab-subject').textContent = (effectivePeriod.lessonType === 'divided' ? effectivePeriod.dividedParts[0].subject : effectivePeriod.subject).substring(0,2).toUpperCase(); document.getElementById('modal-subject').textContent = (effectivePeriod.lessonType === 'divided' ? `${effectivePeriod.dividedParts[0].subject} / ${effectivePeriod.dividedParts[1].subject}` : effectivePeriod.subject) ; document.getElementById('modal-room').textContent = (effectivePeriod.lessonType === 'divided' ? `${effectivePeriod.dividedParts[0].room} / ${effectivePeriod.dividedParts[1].room}` : effectivePeriod.room||'-') ; document.getElementById('modal-teacher').textContent = (effectivePeriod.lessonType === 'divided' ? `${effectivePeriod.dividedParts[0].teacher} / ${effectivePeriod.dividedParts[1].teacher}` : effectivePeriod.teacher||''); const currentTimetableInfo = appState.availableClasses.find(c => c.id === appState.currentTimetableId); let modalClassName = currentTimetableInfo ? currentTimetableInfo.name : appState.currentTimetableId; if (appState.customAccountName) { modalClassName = appState.customAccountName; } document.getElementById('modal-class-name-detail').textContent = effectivePeriod.multiClass && effectivePeriod.classes ? effectivePeriod.classes : modalClassName; document.getElementById('cancelled-banner').style.display = effectivePeriod.isCancelled ? 'block' : 'none'; periodDetailModal.classList.add('active'); }
+    function openEditPeriodSubModal(periodId) { const period = appState.displayTimetableData.find(p => p.id === periodId); if (!period) return; appState.editingPeriodOriginalData = JSON.parse(JSON.stringify(period)); editingPeriodIdInput.value = period.id; document.getElementById('edit-period-title').textContent = `"${period.subject || (period.dividedParts && period.dividedParts[0].subject) || 'Eintrag'}" bearbeiten`; editPeriodSubjectInput.value = period.subject || ''; editPeriodTeacherInput.value = period.teacher || ''; editPeriodRoomInput.value = period.room || ''; editPeriodColorInput.value = period.color || '#FEFADC'; editPeriodTypeSelect.value = period.lessonType || 'normal'; editPeriodCancelledToggle.checked = period.isCancelled || false; if (period.lessonType === 'divided' && period.dividedParts && period.dividedParts.length === 2) { dividedLessonPartsDiv.style.display = 'block'; editDivided1SubjectInput.value = period.dividedParts[0].subject || ''; editDivided1TeacherInput.value = period.dividedParts[0].teacher || ''; editDivided1RoomInput.value = period.dividedParts[0].room || ''; editDivided2SubjectInput.value = period.dividedParts[1].subject || ''; editDivided2TeacherInput.value = period.dividedParts[1].teacher || ''; editDivided2RoomInput.value = period.dividedParts[1].room || ''; } else { dividedLessonPartsDiv.style.display = 'none'; } editPeriodSubModal.classList.add('active'); }
+    function renderCustomizeList() {  customizeListContainer.innerHTML = '';  customAccountNameInput.value = appState.customAccountName;  const currentPlanInfo = appState.availableClasses.find(c => c.id === appState.currentTimetableId);  customizeListCurrentPlan.textContent = currentPlanInfo ? currentPlanInfo.name : appState.currentTimetableId;  if (!appState.displayTimetableData) return;  appState.displayTimetableData.sort((a,b) => {const dayOrder=Object.keys(GERMAN_DAYS); if(dayOrder.indexOf(a.day)===dayOrder.indexOf(b.day))return (timeToMinutes(a.startTime) - timeToMinutes(b.startTime)); return dayOrder.indexOf(a.day)-dayOrder.indexOf(b.day);}).forEach(period => {  const itemDiv = document.createElement('div');  itemDiv.classList.add('customize-item');  itemDiv.innerHTML = `<div class="customize-item-info"><div class="subject">${period.subject || (period.dividedParts ? `${period.dividedParts[0].subject}/${period.dividedParts[1].subject}`: 'Unbekannt')} (${GERMAN_DAYS[period.day]})</div><div class="details">${getPeriodFullTime(period)}</div></div><i class="fas fa-edit" style="margin-left:auto; padding: 5px; cursor:pointer; color: var(--accent-text);"></i>`;  itemDiv.addEventListener('click', () => { openEditPeriodSubModal(period.id); });  customizeListContainer.appendChild(itemDiv);  });  }
     function renderClassesList(filter='') { classesListContainer.innerHTML=''; const filteredClasses = appState.availableClasses.filter(c=>c.name.toLowerCase().includes(filter.toLowerCase())||c.description.toLowerCase().includes(filter.toLowerCase())); filteredClasses.forEach(cls => { const item=document.createElement('div'); item.classList.add('list-item'); item.dataset.classid=cls.id; const isFavorite=appState.favoriteTimetableIds.includes(cls.id); item.innerHTML=`<i class="item-icon fas ${cls.isCustom?'fa-user-circle':'fa-user-friends'}"></i><div class="item-text-content"><div class="item-title">${cls.name}</div><div class="item-subtitle">${cls.description}</div></div><i class="item-action-icon ${isFavorite?'fas fa-star favorited':'far fa-star'}" data-favorite-id="${cls.id}"></i>`; item.querySelector('.item-text-content').addEventListener('click', ()=>{ appState.currentTimetableId=cls.id; loadAndPrepareTimetableData(cls.id); renderTimetable(); navigateToView('timetable-main-view','backward'); saveState(); }); item.querySelector('.item-action-icon').addEventListener('click', (e)=>{ e.stopPropagation(); toggleFavorite(cls.id); renderClassesList(searchClassesInput.value); renderFavoritesList(); }); classesListContainer.appendChild(item); }); }
     function renderFavoritesList(filter='') { favoritesListContainer.innerHTML=''; const favorites = appState.favoriteTimetableIds.map(id => appState.availableClasses.find(c => c.id === id)).filter(Boolean).filter(c => c.name.toLowerCase().includes(filter.toLowerCase()) || (c.description || '').toLowerCase().includes(filter.toLowerCase())); if(favorites.length===0){noFavoritesMessage.style.display='flex';}else{noFavoritesMessage.style.display='none';} favorites.forEach(cls => { const item=document.createElement('div'); item.classList.add('list-item'); item.dataset.classid=cls.id; item.innerHTML=`<i class="item-icon fas ${cls.isCustom?'fa-user-circle':'fa-user-friends'}"></i><div class="item-text-content"><div class="item-title">${cls.name}</div></div><i class="item-action-icon fas fa-times" data-remove-favorite-id="${cls.id}"></i>`; item.querySelector('.item-text-content').addEventListener('click', ()=>{ appState.currentTimetableId=cls.id; loadAndPrepareTimetableData(cls.id); renderTimetable(); navigateToView('timetable-main-view','backward'); saveState(); }); item.querySelector('.item-action-icon').addEventListener('click', (e)=>{e.stopPropagation(); toggleFavorite(cls.id); renderFavoritesList(); renderClassesList(searchClassesInput.value); }); favoritesListContainer.appendChild(item); });}
     function toggleFavorite(timetableId) { const index = appState.favoriteTimetableIds.indexOf(timetableId); if(index > -1){appState.favoriteTimetableIds.splice(index,1);}else{appState.favoriteTimetableIds.push(timetableId);} saveState(); }
     function updateViewChangerSelection() { viewChangerPopup.querySelectorAll('.dialog-option').forEach(opt => { opt.classList.remove('selected'); if (opt.dataset.viewmode === appState.timetableDisplayMode) { opt.classList.add('selected'); } }); }
     function updateCurrentTimeFooter() { const now=new Date(); currentTimeDisplayFooter.textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')} ${formatDate(now, "dd.mm.yy")}`; }
     function navigateToView(targetViewId,direction='forward') {const currentView=document.getElementById(appState.currentView); const targetView=document.getElementById(targetViewId); if(!targetView){console.error("Target view not found:",targetViewId);return;} allAppViews.forEach(v=>{v.classList.remove('active','slide-in-right','slide-out-left');}); if(currentView&&currentView!==targetView){if(direction==='forward'){currentView.classList.add('slide-out-left'); targetView.classList.add('slide-in-right');}else{currentView.classList.add('slide-in-right'); targetView.style.transform='translateX(-100%)'; void targetView.offsetWidth; targetView.style.transform='translateX(0)';} setTimeout(()=>{if(currentView)currentView.classList.remove('active');},300);} targetView.classList.add('active'); appState.currentView=targetViewId;}
-    
-    function renderHeaderDropdown() {
-        headerClassDropdown.innerHTML = '';
-        let currentDisplayName = appState.customAccountName || appState.availableClasses.find(c => c.id === appState.currentTimetableId)?.name || appState.currentTimetableId;
-        const infoItem = document.createElement('div'); infoItem.classList.add('header-dropdown-item', 'info-item'); infoItem.textContent = `Aktuell: ${currentDisplayName}`; headerClassDropdown.appendChild(infoItem);
-        const changePlanItem = document.createElement('div'); changePlanItem.classList.add('header-dropdown-item'); changePlanItem.textContent = 'Stundenplan wechseln...'; changePlanItem.addEventListener('click', () => { renderFavoritesList(); navigateToView('select-timetable-view'); headerClassDropdown.style.display = 'none'; }); headerClassDropdown.appendChild(changePlanItem);
-    }
+    function renderHeaderDropdown() { headerClassDropdown.innerHTML = ''; let currentDisplayName = appState.customAccountName || appState.availableClasses.find(c => c.id === appState.currentTimetableId)?.name || appState.currentTimetableId; const infoItem = document.createElement('div'); infoItem.classList.add('header-dropdown-item', 'info-item'); infoItem.textContent = `Aktuell: ${currentDisplayName}`; headerClassDropdown.appendChild(infoItem); const changePlanItem = document.createElement('div'); changePlanItem.classList.add('header-dropdown-item'); changePlanItem.textContent = 'Stundenplan wechseln...'; changePlanItem.addEventListener('click', () => { renderFavoritesList(); navigateToView('select-timetable-view'); headerClassDropdown.style.display = 'none'; }); headerClassDropdown.appendChild(changePlanItem); }
 
     function setupEventListeners() {
         mainHeaderTitleClickable.addEventListener('click', (event)=>{ event.stopPropagation(); renderHeaderDropdown(); headerClassDropdown.style.display = headerClassDropdown.style.display === 'none' || !headerClassDropdown.style.display ? 'block' : 'none'; });
@@ -654,13 +515,16 @@
         changeViewIcon.addEventListener('click', ()=>{ updateViewChangerSelection(); viewChangerPopup.classList.add('active'); });
         viewChangerPopup.addEventListener('click', (e)=>{ if(e.target===viewChangerPopup)viewChangerPopup.classList.remove('active'); });
         viewChangerPopup.querySelectorAll('.dialog-option').forEach(opt=>{ opt.addEventListener('click', ()=>{ appState.timetableDisplayMode=opt.dataset.viewmode; if(appState.timetableDisplayMode==='daily'&&!appState.currentDailyViewDayKey){appState.currentDailyViewDayKey=Object.keys(GERMAN_DAYS)[0];} renderTimetable(); updateViewChangerSelection(); viewChangerPopup.classList.remove('active'); saveState(); }); });
-        // Day header click listeners are added in renderDayHeadersFull
+        // Day header click listeners are now added in renderDayHeadersFull
         prevWeekBtn.addEventListener('click', ()=>{ appState.currentWeekStartDate = addDays(appState.currentWeekStartDate, -7); renderTimetable(); saveState(); });
         nextWeekBtn.addEventListener('click', ()=>{ appState.currentWeekStartDate = addDays(appState.currentWeekStartDate, 7); renderTimetable(); saveState(); });
         closeDetailModalBtn.addEventListener('click', ()=>periodDetailModal.classList.remove('active'));
         customizeBtn.addEventListener('click', ()=>{ renderCustomizeList(); customizePeriodsModal.classList.add('active'); });
         closeCustomizeModalBtn.addEventListener('click', ()=>customizePeriodsModal.classList.remove('active'));
-        saveCustomizationsBtn.addEventListener('click', ()=>{ appState.customAccountName=customAccountNameInput.value.trim(); const currentPlanId=appState.currentTimetableId; if(!appState.periodCustomizations[currentPlanId]){appState.periodCustomizations[currentPlanId]={};} const customizationsForCurrentPlan=appState.periodCustomizations[currentPlanId]; customizeListContainer.querySelectorAll('.customize-item').forEach(item=>{ const id=item.querySelector('.customize-cancel-toggle').dataset.periodId; const teacher=item.querySelector('.customize-teacher-input').value.trim(); const room=item.querySelector('.customize-room-input').value.trim(); const isCancelled=item.querySelector('.customize-cancel-toggle').checked; if(!customizationsForCurrentPlan[id])customizationsForCurrentPlan[id]={}; const originalPeriod=appState.timetableData.find(p=>p.id===id); if(originalPeriod){if(teacher!==(originalPeriod.teacher||''))customizationsForCurrentPlan[id].teacher=teacher; else delete customizationsForCurrentPlan[id].teacher; if(room!==(originalPeriod.room||''))customizationsForCurrentPlan[id].room=room; else delete customizationsForCurrentPlan[id].room; if(isCancelled||(originalPeriod.isCancelled&&!isCancelled)){customizationsForCurrentPlan[id].isCancelled=isCancelled;}else{delete customizationsForCurrentPlan[id].isCancelled;}}else{customizationsForCurrentPlan[id].teacher=teacher; customizationsForCurrentPlan[id].room=room; customizationsForCurrentPlan[id].isCancelled=isCancelled;} if(Object.keys(customizationsForCurrentPlan[id]).length===0){delete customizationsForCurrentPlan[id];}}); if(Object.keys(customizationsForCurrentPlan).length===0){delete appState.periodCustomizations[currentPlanId];} loadAndPrepareTimetableData(currentPlanId); renderTimetable(); customizePeriodsModal.classList.remove('active'); saveState();});
+        saveCustomizationsBtn.addEventListener('click', ()=>{ appState.customAccountName=customAccountNameInput.value.trim(); loadAndPrepareTimetableData(appState.currentTimetableId); renderTimetable(); customizePeriodsModal.classList.remove('active'); saveState();});
+        closeEditPeriodSubModalBtn.addEventListener('click', () => editPeriodSubModal.classList.remove('active'));
+        editPeriodTypeSelect.addEventListener('change', (e) => { dividedLessonPartsDiv.style.display = e.target.value === 'divided' ? 'block' : 'none'; });
+        saveSinglePeriodChangesBtn.addEventListener('click', () => { const periodId = editingPeriodIdInput.value; if (!periodId) return; const currentPlanId = appState.currentTimetableId; if (!appState.periodCustomizations[currentPlanId]) appState.periodCustomizations[currentPlanId] = {}; if (!appState.periodCustomizations[currentPlanId][periodId]) appState.periodCustomizations[currentPlanId][periodId] = {}; const customPeriod = appState.periodCustomizations[currentPlanId][periodId]; const originalPeriod = appState.editingPeriodOriginalData; const newSubject = editPeriodSubjectInput.value.trim(); const newTeacher = editPeriodTeacherInput.value.trim(); const newRoom = editPeriodRoomInput.value.trim(); const newColor = editPeriodColorInput.value; const newType = editPeriodTypeSelect.value; const newCancelled = editPeriodCancelledToggle.checked; if (newSubject !== (originalPeriod.subject || '')) customPeriod.subject = newSubject; else delete customPeriod.subject; if (newTeacher !== (originalPeriod.teacher || '')) customPeriod.teacher = newTeacher; else delete customPeriod.teacher; if (newRoom !== (originalPeriod.room || '')) customPeriod.room = newRoom; else delete customPeriod.room; if (newColor !== (originalPeriod.color || '#FEFADC')) customPeriod.color = newColor; else delete customPeriod.color; const originalType = originalPeriod.lessonType || (originalPeriod.isDivided ? 'divided' : (originalPeriod.endTime && originalPeriod.startTime && (timeToMinutes(originalPeriod.endTime) - timeToMinutes(originalPeriod.startTime) > 50) ? 'double' : 'normal')); if (newType !== originalType) customPeriod.lessonType = newType; else delete customPeriod.lessonType; if (newCancelled !== (originalPeriod.isCancelled || false)) customPeriod.isCancelled = newCancelled; else delete customPeriod.isCancelled; if (newType === 'divided') { customPeriod.dividedParts = [ { subject: editDivided1SubjectInput.value.trim(), teacher: editDivided1TeacherInput.value.trim(), room: editDivided1RoomInput.value.trim() }, { subject: editDivided2SubjectInput.value.trim(), teacher: editDivided2TeacherInput.value.trim(), room: editDivided2RoomInput.value.trim() } ]; } else { delete customPeriod.dividedParts; } if (Object.keys(customPeriod).length === 0) { delete appState.periodCustomizations[currentPlanId][periodId]; } if (Object.keys(appState.periodCustomizations[currentPlanId]).length === 0) { delete appState.periodCustomizations[currentPlanId]; } editPeriodSubModal.classList.remove('active'); loadAndPrepareTimetableData(appState.currentTimetableId); renderTimetable(); renderCustomizeList(); saveState(); });
         selectClassesOption.addEventListener('click', () => { renderClassesList(); navigateToView('classes-view'); });
         document.querySelectorAll('.back-arrow').forEach(arrow => { arrow.addEventListener('click', (e) => { const targetViewId = e.currentTarget.dataset.targetview; if (targetViewId) navigateToView(targetViewId, 'backward'); }); });
         searchClassesInput.addEventListener('input', (e) => renderClassesList(e.target.value));
@@ -713,6 +577,23 @@
         favoritesListContainer = document.getElementById('favorites-list-container');
         noFavoritesMessage = document.getElementById('no-favorites-message');
         headerClassDropdown = document.getElementById('header-class-dropdown');
+        editPeriodSubModal = document.getElementById('edit-period-sub-modal');
+        closeEditPeriodSubModalBtn = document.getElementById('close-edit-period-sub-modal');
+        saveSinglePeriodChangesBtn = document.getElementById('save-single-period-changes');
+        editingPeriodIdInput = document.getElementById('editing-period-id');
+        editPeriodSubjectInput = document.getElementById('edit-period-subject');
+        editPeriodTeacherInput = document.getElementById('edit-period-teacher');
+        editPeriodRoomInput = document.getElementById('edit-period-room');
+        editPeriodColorInput = document.getElementById('edit-period-color');
+        editPeriodTypeSelect = document.getElementById('edit-period-type');
+        dividedLessonPartsDiv = document.getElementById('divided-lesson-parts');
+        editDivided1SubjectInput = document.getElementById('edit-divided1-subject');
+        editDivided1TeacherInput = document.getElementById('edit-divided1-teacher');
+        editDivided1RoomInput = document.getElementById('edit-divided1-room');
+        editDivided2SubjectInput = document.getElementById('edit-divided2-subject');
+        editDivided2TeacherInput = document.getElementById('edit-divided2-teacher');
+        editDivided2RoomInput = document.getElementById('edit-divided2-room');
+        editPeriodCancelledToggle = document.getElementById('edit-period-cancelled');
         console.log("Assigning DOM elements END");
     }
 
